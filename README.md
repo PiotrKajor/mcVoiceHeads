@@ -2,7 +2,23 @@
 
 Userplugin Vencorda, który podmienia awatary wybranych osób na Discordzie na twarze ich skinów z Minecrafta (na podstawie UUID konta MC). Awatar w spoczynku jest półprzezroczysty, a gdy dana osoba mówi na kanale głosowym, płynnie przechodzi do pełnej nieprzezroczystości.
 
-## Budowanie
+## Instalacja (automatyczna)
+
+Wymaga tylko `git` i `node` (Windows/Mac/Linux). Skrypt sam doinstaluje `pnpm`, sklonuje/zaktualizuje Vencorda i ten plugin, zbuduje i wstrzyknie do klienta Discord.
+
+```bash
+curl -o install.mjs https://raw.githubusercontent.com/PiotrKajor/mcVoiceHeads/master/install.mjs
+node install.mjs
+```
+
+Domyślnie klonuje Vencorda do `~/Vencord`. Żeby użyć innej lokalizacji (np. już istniejącego klonu):
+```bash
+node install.mjs /sciezka/do/Vencord
+```
+
+Zrestartuj Discorda po zakończeniu.
+
+## Budowanie (ręcznie)
 
 1. Zainstaluj `pnpm` (jeśli nie masz): `corepack enable` albo `npm install -g pnpm`.
 2. Sklonuj Vencorda i wejdź do repo:
@@ -12,7 +28,7 @@ Userplugin Vencorda, który podmienia awatary wybranych osób na Discordzie na t
    ```
 3. Sklonuj to repo bezpośrednio do `src/userplugins/mcVoiceHeads/`:
    ```bash
-   git clone <url-tego-repo> src/userplugins/mcVoiceHeads
+   git clone https://github.com/PiotrKajor/mcVoiceHeads src/userplugins/mcVoiceHeads
    ```
 4. Zainstaluj zależności i zbuduj:
    ```bash
@@ -51,13 +67,16 @@ Wejdź na `https://api.mojang.com/users/profiles/minecraft/<nick>` (np. w przegl
 
 ## Ponowne budowanie po aktualizacji Vencorda
 
+Najprościej: uruchom ponownie `node install.mjs [ścieżka-do-Vencorda]` — zaktualizuje i przebuduje wszystko.
+
+Ręcznie:
 ```bash
 git pull
 pnpm install
 pnpm build
 pnpm inject
 ```
-Katalog `src/userplugins/mcVoiceHeads/` nie jest częścią repo Vencorda, więc `git pull` go nie ruszy — wystarczy przebudować.
+Katalog `src/userplugins/mcVoiceHeads/` nie jest częścią repo Vencorda, więc `git pull` w Vencordzie go nie ruszy — trzeba osobno zaktualizować plugin (`git -C src/userplugins/mcVoiceHeads pull`) i przebudować.
 
 ## Znane ograniczenie
 
