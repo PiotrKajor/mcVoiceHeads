@@ -1,5 +1,7 @@
 <div align="center">
 
+<sub><b>Polski</b> · <a href="README.en.md">English</a></sub>
+
 # 🎧 mcVoiceHeads
 
 **Userplugin Vencorda — podmienia awatary wybranych osób na Discordzie na twarze ich skinów z Minecrafta.**
