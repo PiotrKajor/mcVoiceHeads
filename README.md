@@ -212,6 +212,7 @@ w Vencordzie go nie ruszy — trzeba osobno zaktualizować plugin
 | Efekt jaśnienia przy mówieniu nie działa | Klasy CSS Discorda są hashowane i zmieniają się między wersjami. Otwórz DevTools (Ctrl+Shift+I), znajdź faktyczną klasę elementu mówiącego uczestnika i podmień selektor `[class*="speaking"]` w stałej `CSS` w `index.tsx`. |
 | `pnpm inject` nie widzi Discorda | Uruchom Discorda przynajmniej raz przed instalacją; jeśli instalator Vencorda pyta o ścieżkę, wskaż ją ręcznie. |
 | Awatar się nie zmienił mimo poprawnego `userMap` | Sprawdź walidację ustawienia (czerwony komunikat = zły JSON/UUID) i czy Discord ID jest poprawne (Ustawienia → Zaawansowane → Tryb dewelopera, potem PPM na osobę → Kopiuj ID użytkownika). |
+| Nic się nie zmienia w **nakładce w grze** (Discord Game Overlay) | To nie jest błąd pluginu — Vencord w ogóle nie wstrzykuje się do okna nakładki w grze (osobne, niepatchowane okno Electron), więc żaden jego plugin tam nie działa. Testuj efekt w normalnym oknie aplikacji Discord (lista uczestników kanału głosowego w bocznym pasku albo wyskakujące okienko rozmowy). |
 
 ## Wymagania
 
