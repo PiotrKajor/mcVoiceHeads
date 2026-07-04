@@ -35,20 +35,61 @@ głosowym, awatar płynnie przechodzi z półprzezroczystego spoczynku do pełny
 
 ## Instalacja (automatyczna)
 
-Wymaga tylko `git` i `node` (Windows/macOS/Linux). Skrypt sam doinstaluje `pnpm`,
-sklonuje/zaktualizuje Vencorda i ten plugin, zbuduje i wstrzyknie do klienta Discord.
+Wymaga tylko **`git`** i **`node`** (Windows/macOS/Linux) w PATH. Skrypt `install.mjs`
+sam doinstaluje `pnpm`, sklonuje/zaktualizuje Vencorda i ten plugin, zbuduje wszystko
+i wstrzyknie do klienta Discord.
 
-```bash
-curl -o install.mjs https://raw.githubusercontent.com/PiotrKajor/mcVoiceHeads/master/install.mjs
-node install.mjs
-```
+### Krok po kroku
 
-Domyślnie klonuje Vencorda do `~/Vencord`. Żeby użyć innej lokalizacji (np. już istniejącego klonu):
+1. Sprawdź, że masz `git` i `node` (Node.js 18+):
+   ```bash
+   git --version
+   node --version
+   ```
+   Jeśli któregoś brakuje: [git-scm.com](https://git-scm.com/downloads) i [nodejs.org](https://nodejs.org/).
+
+2. Pobierz skrypt instalacyjny:
+   ```bash
+   curl -o install.mjs https://raw.githubusercontent.com/PiotrKajor/mcVoiceHeads/master/install.mjs
+   ```
+   **Windows (PowerShell)**, jeśli nie masz `curl`:
+   ```powershell
+   Invoke-WebRequest https://raw.githubusercontent.com/PiotrKajor/mcVoiceHeads/master/install.mjs -OutFile install.mjs
+   ```
+
+3. Uruchom go:
+   ```bash
+   node install.mjs
+   ```
+
+### Co się wtedy dzieje (kolejno)
+
+1. Sprawdza, czy `pnpm` jest dostępny — jeśli nie, próbuje `corepack enable`, a gdy to
+   zawiedzie, `npm install -g pnpm`.
+2. Jeśli katalog docelowy Vencorda nie istnieje — klonuje `Vendicated/Vencord`.
+3. Klonuje ten plugin do `src/userplugins/mcVoiceHeads/` (albo `git pull`, jeśli już tam jest).
+4. Odpala po kolei `pnpm install`, `pnpm build`, `pnpm inject` wewnątrz katalogu Vencorda.
+
+Cały output tych komend widzisz na żywo w terminalu — jeśli coś się wysypie (np. brak
+uprawnień, brak Discorda), zobaczysz dokładnie na którym kroku i dlaczego.
+
+### Własna lokalizacja Vencorda
+
+Domyślnie skrypt klonuje/używa `~/Vencord`. Żeby wskazać inną lokalizację (np. już
+istniejący klon):
 ```bash
 node install.mjs /sciezka/do/Vencord
 ```
+```powershell
+node install.mjs C:\Users\Ty\Vencord
+```
 
-Zrestartuj Discorda po zakończeniu.
+### Po instalacji
+
+`pnpm inject` zapyta o ścieżkę do klienta Discord, jeśli nie wykryje jej automatycznie —
+wskaż folder instalacji (np. `%LOCALAPPDATA%\Discord` na Windows). Na końcu **zrestartuj
+Discorda całkowicie** (nie tylko odśwież okno) i włącz plugin w ustawieniach — patrz
+sekcja [Włączenie pluginu](#włączenie-pluginu) niżej.
 
 ## Budowanie (ręcznie)
 
@@ -102,9 +143,42 @@ koła zębatego przy pluginie, żeby otworzyć jego ustawienia.
 
 ## Jak znaleźć UUID gracza po nicku
 
-Wejdź na `https://api.mojang.com/users/profiles/minecraft/<nick>` (np. w przeglądarce albo
-`curl`) — w odpowiedzi JSON pole `id` to UUID (bez myślników). Można go użyć bezpośrednio
-w `userMap`.
+Publiczne API Mojanga zwraca UUID na podstawie aktualnego nicku gracza.
+
+```bash
+curl -s https://api.mojang.com/users/profiles/minecraft/<nick>
+```
+
+Przykład dla gracza `Notch`:
+```bash
+curl -s https://api.mojang.com/users/profiles/minecraft/Notch
+```
+zwraca:
+```json
+{"id":"069a79f444e94726a5befca90e38aaf5","name":"Notch"}
+```
+Pole `id` to szukany UUID (bez myślników) — wklej je bezpośrednio jako wartość w `userMap`:
+```json
+{"123456789012345678": "069a79f444e94726a5befca90e38aaf5"}
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-RestMethod https://api.mojang.com/users/profiles/minecraft/<nick>
+```
+
+**Samo pole `id`, jeśli masz `jq`:**
+```bash
+curl -s https://api.mojang.com/users/profiles/minecraft/<nick> | jq -r .id
+```
+
+**Gdy gracz nie istnieje** — API zwraca pusty body (HTTP 204):
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" https://api.mojang.com/users/profiles/minecraft/<nick>
+# 204 = zły nick albo gracz nie istnieje
+```
+API działa po **aktualnym** nicku, nie po historii nazw — jeśli gracz niedawno się
+przemianował, sprawdź jego obecny nick (np. na Namemc) zanim odpytasz Mojanga.
 
 ## Ponowne budowanie po aktualizacji Vencorda
 
