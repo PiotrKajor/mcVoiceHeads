@@ -68,10 +68,17 @@ i wstrzyknie do klienta Discord.
    zawiedzie, `npm install -g pnpm`.
 2. Jeśli katalog docelowy Vencorda nie istnieje — klonuje `Vendicated/Vencord`.
 3. Klonuje ten plugin do `src/userplugins/mcVoiceHeads/` (albo `git pull`, jeśli już tam jest).
-4. Odpala po kolei `pnpm install`, `pnpm build`, `pnpm inject` wewnątrz katalogu Vencorda.
+4. Odpala `pnpm install`, potem `pnpm build`.
+5. **Zatrzymuje się i prosi o zamknięcie Discorda** (Enter, żeby kontynuować) — dopiero
+   wtedy odpala `pnpm inject`. Wstrzykiwanie wymaga, żeby Discord nie był uruchomiony
+   (nawet w zasobniku systemowym), inaczej instalator Vencorda zgłosi błąd typu
+   „Cannot patch because Discord's files are used by a different process".
 
 Cały output tych komend widzisz na żywo w terminalu — jeśli coś się wysypie (np. brak
-uprawnień, brak Discorda), zobaczysz dokładnie na którym kroku i dlaczego.
+uprawnień, Discord jednak działał w tle), zobaczysz dokładnie na którym kroku i dlaczego.
+Instalator Vencorda potrafi przy takim błędzie i tak zakończyć się bez zgłoszenia błędu
+do systemu — **zawsze sprawdź log**, nie tylko ostatnią linijkę. W razie błędu wystarczy
+zamknąć Discorda i ręcznie powtórzyć sam ten krok w katalogu Vencorda: `pnpm inject`.
 
 ### Własna lokalizacja Vencorda
 
