@@ -45,7 +45,21 @@ Requires only **`git`** and **`node`** (Windows/macOS/Linux) in PATH. The `insta
 script installs `pnpm` for you, clones/updates Vencord and this plugin, builds everything
 and injects it into the Discord client.
 
-### Step by step
+### One click (easiest)
+
+Download the launcher for your OS and run it — it checks `node`/`git`, downloads the latest
+`install.mjs` and runs the whole installation. You still need **`git`** and **`node`** (18+)
+installed.
+
+- **Windows** — download [`install.bat`](https://raw.githubusercontent.com/PiotrKajor/mcVoiceHeads/master/install.bat) and double-click it.
+- **macOS** — download [`install.command`](https://raw.githubusercontent.com/PiotrKajor/mcVoiceHeads/master/install.command) and double-click it. On first run Gatekeeper may block it — right-click the file → **Open** → **Open**. (Or from a terminal: `chmod +x install.command && ./install.command`.)
+- **Linux** — download [`install.sh`](https://raw.githubusercontent.com/PiotrKajor/mcVoiceHeads/master/install.sh) and run: `bash install.sh` (or `chmod +x install.sh && ./install.sh`).
+
+During the process the installer asks you to **close Discord completely** before injecting —
+see the notes in the [Via terminal](#via-terminal) section below. Advanced: you can pass a
+custom Vencord path to the launcher as an argument (e.g. `install.bat C:\Users\You\Vencord`).
+
+### Via terminal
 
 1. Make sure you have `git` and `node` (Node.js 18+):
    ```bash

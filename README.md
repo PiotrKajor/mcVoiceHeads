@@ -44,7 +44,21 @@ Wymaga tylko **`git`** i **`node`** (Windows/macOS/Linux) w PATH. Skrypt `instal
 sam doinstaluje `pnpm`, sklonuje/zaktualizuje Vencorda i ten plugin, zbuduje wszystko
 i wstrzyknie do klienta Discord.
 
-### Krok po kroku
+### Jednym kliknięciem (najprościej)
+
+Pobierz launcher dla swojego systemu i uruchom go — sam sprawdzi `node`/`git`, pobierze
+najnowszy `install.mjs` i przeprowadzi całą instalację. Nadal potrzebujesz zainstalowanych
+**`git`** i **`node`** (18+).
+
+- **Windows** — pobierz [`install.bat`](https://raw.githubusercontent.com/PiotrKajor/mcVoiceHeads/master/install.bat) i kliknij dwukrotnie.
+- **macOS** — pobierz [`install.command`](https://raw.githubusercontent.com/PiotrKajor/mcVoiceHeads/master/install.command) i kliknij dwukrotnie. Przy pierwszym uruchomieniu Gatekeeper może zablokować plik — kliknij go prawym przyciskiem → **Otwórz** → **Otwórz**. (Albo z terminala: `chmod +x install.command && ./install.command`.)
+- **Linux** — pobierz [`install.sh`](https://raw.githubusercontent.com/PiotrKajor/mcVoiceHeads/master/install.sh) i uruchom: `bash install.sh` (albo `chmod +x install.sh && ./install.sh`).
+
+W trakcie instalator poprosi o **całkowite zamknięcie Discorda** przed wstrzyknięciem — patrz
+uwagi w sekcji [Przez terminal](#przez-terminal) niżej. Zaawansowani: launcherowi możesz
+przekazać własną ścieżkę do Vencorda jako argument (np. `install.bat C:\Users\Ty\Vencord`).
+
+### Przez terminal
 
 1. Sprawdź, że masz `git` i `node` (Node.js 18+):
    ```bash
