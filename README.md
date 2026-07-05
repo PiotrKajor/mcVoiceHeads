@@ -1,3 +1,9 @@
+# Overlayed — fork: Minecraft skin heads
+
+> **This fork** of [overlayeddev/overlayed](https://github.com/overlayeddev/overlayed) shows the **Minecraft skin head** (via [mc-heads.net](https://mc-heads.net)) instead of the Discord avatar for mapped users. Map Discord IDs to Minecraft UUIDs or usernames in *Settings → Configuration → Minecraft skin heads* (JSON, e.g. `{"123456789012345678": "Notch"}`). Everything else — talking indicator, mute/deaf, opacity — works as in upstream Overlayed. Licensed AGPL-3.0, sources public in this repo.
+
+---
+
 # Overlayed
 
 <p align="center">
