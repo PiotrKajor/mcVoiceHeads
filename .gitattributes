@@ -1,0 +1,6 @@
+# Enforce correct line endings so the launchers work on every OS.
+*.bat        text eol=crlf
+*.cmd        text eol=crlf
+*.sh         text eol=lf
+*.command    text eol=lf
+install.mjs  text eol=lf
