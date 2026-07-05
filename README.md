@@ -1,58 +1,53 @@
 # mcVoiceHeads
 
-> A fork of [overlayeddev/overlayed](https://github.com/overlayeddev/overlayed) that shows the **Minecraft skin head** (via [mc-heads.net](https://mc-heads.net)) instead of the Discord avatar for mapped users. Map Discord IDs to Minecraft UUIDs or usernames in *Settings → Configuration → Minecraft skin heads* (JSON, e.g. `{"123456789012345678": "Notch"}`). Everything else — talking indicator, mute/deaf, opacity — works as in upstream Overlayed. Licensed AGPL-3.0, sources public in this repo.
->
-> The previous incarnation of this project — a Vencord userplugin — is preserved on the [`vencord-plugin`](https://github.com/PiotrKajor/mcVoiceHeads/tree/vencord-plugin) branch.
+Nakładka głosowa Discorda, która dla wybranych osób pokazuje **głowę ich skina Minecraft** zamiast awatara Discorda. Idealna na serwery MC — od razu widać po skinie, kto mówi.
 
----
+*A Discord voice overlay showing the Minecraft skin head (via [mc-heads.net](https://mc-heads.net)) instead of the Discord avatar for mapped users. Fork of [Overlayed](https://github.com/overlayeddev/overlayed).*
 
-# Overlayed
+## Instalacja
 
-<p align="center">
-  <img src="https://github.com/overlayeddev/overlayed/assets/996134/b152c100-d06d-41d2-a795-32ea619fd1b5" height="128" />
-</p>
+Pobierz instalator z [**Releases**](https://github.com/PiotrKajor/mcVoiceHeads/releases):
 
-<a href="https://discord.gg/eXmeNkVjye" target="_parent">
-<img alt="Discord" height=20 src="https://img.shields.io/discord/906349283358408704?style=&logo=discord&logoColor=white&label=%20&labelColor=5865F2&color=5865F2" />
-</a>
-<a href="https://twitter.com/OverlayedDev" target="_parent">
-<img alt="Twitter" height=20 src="https://img.shields.io/twitter/follow/overlayeddev.svg?style=&logo=twitter&logoColor=white&label=@OverlayedDev&labelColor=%231DA1F2&color=%231DA1F2" />
-</a>
-<a href="https://overlayed.dev/canary" target="_parent">
-<img alt="Canary Build" height=20 src="https://img.shields.io/github/actions/workflow/status/overlayeddev/overlayed/.github%2Fworkflows%2Fcanary.yaml?label=Canary Build" />
-</a>
+| System | Plik |
+|--------|------|
+| Windows | `mcVoiceHeads_x.y.z_x64-setup.exe` |
+| Linux | `.deb` / `.AppImage` |
+| macOS | `.dmg` |
 
+> Buildy nie są podpisane certyfikatem — Windows SmartScreen pokaże ostrzeżenie („Więcej informacji" → „Uruchom mimo to"), a na macOS trzeba zezwolić w Ustawieniach prywatności.
 
-A modern, open-source, and free voice chat overlay for Discord that supports Mac, Linux, and Windows!
+## Konfiguracja
 
-### Installation
+1. Uruchom aplikację i zaloguj przez Discord (standardowy flow Overlayed).
+2. Wejdź w **Settings → Configuration → Minecraft skin heads**.
+3. Wpisz mapowanie JSON: Discord ID → nick albo UUID Minecraft:
 
-#### Windows - Winget
-
-```
-winget install OverlayedDev.Overlayed
+```json
+{
+  "123456789012345678": "Notch",
+  "987654321098765432": "069a79f4-44e9-4726-a5be-fca90e38aaf5"
+}
 ```
 
-#### MacOS - Homebrew
+- **Discord ID** skopiujesz po włączeniu trybu dewelopera w Discordzie (Ustawienia → Zaawansowane → Tryb dewelopera → PPM na użytkowniku → „Kopiuj ID użytkownika").
+- **Nick MC** wystarczy — UUID nie jest potrzebny (mc-heads.net rozwiązuje nick sam). UUID znajdziesz np. na [NameMC](https://namemc.com) albo przez API Mojanga: `https://api.mojang.com/users/profiles/minecraft/<nick>`.
+- Nieprawidłowy wpis podświetla się na czerwono i nie jest zapisywany; niezmapowani użytkownicy mają zwykły awatar Discorda.
 
+Wszystko poza podmianą awatarów — wskaźnik mówienia, mute/deaf, przezroczystość, przypinanie — działa jak w Overlayed.
+
+## Development
+
+```bash
+npm_config_force=true pnpm install   # zależność @types/github-script wymaga node 20; force przy nowszym node
+pnpm start --filter=desktop          # dev (wymaga Rust + webkit2gtk na Linuksie)
+pnpm build:desktop:unsigned          # build instalatora bez podpisu
+cd apps/desktop && node --experimental-strip-types tests/parseUserMap.test.ts   # testy logiki mapowania
 ```
-brew install overlayed
-```
 
-#### Linux - Flathub
+Wydania buduje GitHub Actions po wypchnięciu tagu `v*` (workflow `release.yaml`, draft do ręcznej publikacji).
 
-```
-flatpak install flathub dev.overlayed.Overlayed
-```
+## Licencja i pochodzenie
 
-#### Guides for all Platforms
+Fork [overlayeddev/overlayed](https://github.com/overlayeddev/overlayed) (**AGPL-3.0** — pełne źródła w tym repo). Cała baza nakładki (Tauri + React) pochodzi z Overlayed; ten fork dodaje wyłącznie mapowanie Discord ID → skin i podmianę URL awatara (`apps/desktop/src/utils/parseUserMap.ts`, `user.tsx`, zakładka ustawień).
 
-https://overlayed.dev/blog/installation-guide
-
-### Contributing
-
-If you want to help out please see [CONTRIBUTING.md](./CONTRIBUTING.md) to see how to get started.
-
-### Support
-
-If you enjoy this project consider giving it a star ⭐.
+Pierwsze wcielenie projektu — userplugin Vencorda — jest zachowane na gałęzi [`vencord-plugin`](https://github.com/PiotrKajor/mcVoiceHeads/tree/vencord-plugin).
