@@ -21,8 +21,3 @@ pub static HIGHER_LEVEL_THAN_LEAGUE: i32 = 1001;
 /// Float panel window level
 #[cfg(target_os = "macos")]
 pub static OVERLAYED_NORMAL_LEVEL: i32 = 8;
-
-/// HACK: this allows constraint of the size of the settings window
-/// because the save sate plugin will not allow use to filter windows out
-pub const SETTINGS_WINDOW_WIDTH: i32 = 600;
-pub const SETTINGS_WINDOW_HEIGHT: i32 = 480;

@@ -20,7 +20,7 @@ use std::{
   str::FromStr,
   sync::{atomic::AtomicBool, Mutex},
 };
-use tauri::{generate_handler, menu::Menu, LogicalSize, Manager, Wry};
+use tauri::{generate_handler, menu::Menu, Manager, Wry};
 use tauri_plugin_log::{Target, TargetKind};
 use tauri_plugin_window_state::{AppHandleExt, StateFlags};
 use tray::Tray;
@@ -154,12 +154,6 @@ fn main() {
 
       // update the system tray
       Tray::update_tray(app.app_handle());
-
-      // NOTE: always force settings window to be a certain size
-      settings.set_size(LogicalSize {
-        width: SETTINGS_WINDOW_WIDTH,
-        height: SETTINGS_WINDOW_HEIGHT,
-      });
 
       Ok(())
     })
