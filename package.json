@@ -1,0 +1,11 @@
+{
+  "name": "mcvoiceheads",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Vencord userplugin: podmienia awatary na głowy skinów Minecraft, z efektem mówienia i pływającą nakładką kanału głosowego",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "test": "node --disable-warning=ExperimentalWarning parseUserMap.test.ts && node --disable-warning=ExperimentalWarning voicePanel.test.ts"
+  }
+}

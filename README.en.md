@@ -28,7 +28,10 @@ idle state to full color.
 ## Features
 
 - 🪖 Replaces the avatar with a Minecraft skin head (any URL template, `mc-heads.net` by default)
+- 🏷️ Each mapping accepts a **UUID or a Minecraft nickname** (the avatar service, e.g. `mc-heads.net`, resolves the nick)
 - 🗣️ Smooth brightening of the avatar when speaking in a voice channel (opacity + a ~150ms transition)
+- 🪟 A floating, draggable **voice-channel panel** — participants as Minecraft heads with a live speaking highlight (inspired by [Overlayed](https://github.com/overlayeddev/overlayed))
+- 🔇 **Mute and deafen** indicators on the panel — grayscale avatar + an icon
 - 🎯 Replacement scope: everywhere, or only in the voice-channel view
 - 🟢 Optionally hides Discord's native green speaking ring
 - 🌐 The opacity effect optionally applies to unmapped participants too
@@ -132,15 +135,20 @@ icon next to the plugin to open its settings.
 
 ## Settings
 
-- **userMap** — a mapping of Discord ID → Minecraft UUID as JSON, e.g.:
+- **userMap** — a mapping of Discord ID → Minecraft UUID **or nickname** as JSON, e.g.:
   ```json
   {
     "123456789012345678": "069a79f4-44e9-4726-a5be-fca90e38aaf5",
-    "987654321098765432": "8667ba71b85a4004af54457a9734eed7"
+    "987654321098765432": "8667ba71b85a4004af54457a9734eed7",
+    "111222333444555666": "Notch"
   }
   ```
-  The UUID may be with or without dashes — it will be normalized automatically. Invalid JSON
-  or an invalid UUID triggers a validation error on save.
+  The UUID may be with or without dashes — it will be normalized automatically. Instead of a
+  UUID you can enter a **Minecraft nickname** (3–16 chars of `[A-Za-z0-9_]`) — the default
+  `mc-heads.net` service resolves it server-side, so you don't have to look up the UUID
+  yourself. A UUID is more robust though: a nickname follows account renames, a UUID does not.
+  Invalid JSON or a value that is neither a UUID nor a nickname triggers a validation error on
+  save.
 - **restrictToVoiceView** — if enabled, the replacement only works while that person is
   currently in a voice channel; if disabled (the default), the avatar is replaced everywhere
   (messages, member list, profile…).
@@ -151,8 +159,30 @@ icon next to the plugin to open its settings.
   by default).
 - **applyToAllParticipants** — applies the opacity/speaking effect to unmapped people too (on
   their original avatars), not only to those in the `userMap` list.
+- **showVoicePanel** — enables the floating voice-channel panel (disabled by default).
+
+## Voice panel
+
+Inspired by [Overlayed](https://github.com/overlayeddev/overlayed). When **showVoicePanel** is
+on, the plugin draws a small, draggable window inside the Discord client listing everyone in
+your current voice channel:
+
+- each participant as a Minecraft head (if mapped) or their regular Discord avatar,
+- the **person speaking** is highlighted and fully opaque, everyone else is dimmed (to the same
+  level as `idleOpacity`),
+- **muted / deafened** users get a grayscale avatar and an icon (🔇 / 🎧),
+- the header shows the channel name; drag the window by its header, and `×` closes it
+  (turning `showVoicePanel` off).
+
+The panel only appears while you're in a voice channel and disappears when you leave. It renders
+in the **normal Discord app window** — not in the in-game overlay (Game Overlay); see
+[Common problems](#common-problems).
 
 ## How to find a player's UUID by nickname
+
+> 💡 With the default `mc-heads.net` service you can just put a **nickname** in `userMap`
+> instead of a UUID — the steps below are only needed if you want to hard-code a UUID (stable
+> across renames) or use a service that accepts UUIDs only.
 
 Mojang's public API returns a UUID based on a player's current nickname.
 
@@ -222,7 +252,15 @@ in Vencord won't touch it — you need to update the plugin separately
 
 - A Discord (desktop) client with Vencord installed
 - **Node.js** and **git** (for building/installing)
-- The Minecraft account UUIDs of the people whose avatars you want to replace
+- The Minecraft account UUIDs **or nicknames** of the people whose avatars you want to replace
+
+## Tests
+
+The pure logic (map parsing, UUID/nickname validation, panel helpers) has unit tests run via
+Node's built-in type stripping (18+, 22+ recommended):
+```bash
+npm test
+```
 
 ## License
 

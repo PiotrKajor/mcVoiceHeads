@@ -9,6 +9,24 @@ export function normalizeUuid(raw: string): string | null {
     return /^[0-9a-f]{32}$/.test(stripped) ? stripped : null;
 }
 
+/** Minecraft (Java) usernames are 3-16 chars of [A-Za-z0-9_]. */
+export function isMinecraftName(raw: string): boolean {
+    return /^[A-Za-z0-9_]{3,16}$/.test(raw);
+}
+
+/**
+ * Accepts either a Minecraft UUID (dashes optional) or a current Minecraft
+ * username, and returns the value to substitute into the avatar URL template.
+ * UUIDs are normalized to 32 lowercase hex chars; usernames are returned as
+ * typed (avatar services such as mc-heads.net resolve them server-side).
+ */
+export function resolveMcId(value: string): string | null {
+    const uuid = normalizeUuid(value);
+    if (uuid) return uuid;
+    if (isMinecraftName(value)) return value;
+    return null;
+}
+
 export function parseUserMap(json: string): Record<string, string> | null {
     let parsed: unknown;
     try {
@@ -21,9 +39,9 @@ export function parseUserMap(json: string): Record<string, string> | null {
     const result: Record<string, string> = {};
     for (const [discordId, value] of Object.entries(parsed as Record<string, unknown>)) {
         if (typeof value !== "string") return null;
-        const uuid = normalizeUuid(value);
-        if (!uuid) return null;
-        result[discordId] = uuid;
+        const mcId = resolveMcId(value);
+        if (!mcId) return null;
+        result[discordId] = mcId;
     }
     return result;
 }
