@@ -27,7 +27,10 @@ głosowym, awatar płynnie przechodzi z półprzezroczystego spoczynku do pełny
 ## Funkcje
 
 - 🪖 Podmiana awatara na głowę skina Minecraft (dowolny szablon URL, domyślnie `mc-heads.net`)
+- 🏷️ W mapowaniu możesz podać **UUID albo nick** Minecraft (nick rozwiązuje serwis awatarów, np. `mc-heads.net`)
 - 🗣️ Płynne jaśnienie awatara przy mówieniu na kanale głosowym (opacity + przejście ~150ms)
+- 🪟 Pływająca, przeciągalna **nakładka kanału głosowego** — uczestnicy jako głowy Minecraft z live podświetleniem mówiącego (inspirowana [Overlayed](https://github.com/overlayeddev/overlayed))
+- 🔇 Wskaźniki **wyciszenia i ogłuszenia** (mute/deaf) na nakładce — awatar w skali szarości + ikona
 - 🎯 Zakres podmiany: wszędzie albo tylko w widoku kanału głosowego
 - 🟢 Opcjonalne ukrycie natywnej zielonej obwódki mówienia Discorda
 - 🌐 Efekt opacity opcjonalnie też dla niezmapowanych uczestników
@@ -130,15 +133,19 @@ koła zębatego przy pluginie, żeby otworzyć jego ustawienia.
 
 ## Ustawienia
 
-- **userMap** — mapowanie Discord ID → UUID Minecrafta jako JSON, np.:
+- **userMap** — mapowanie Discord ID → UUID **lub nick** Minecrafta jako JSON, np.:
   ```json
   {
     "123456789012345678": "069a79f4-44e9-4726-a5be-fca90e38aaf5",
-    "987654321098765432": "8667ba71b85a4004af54457a9734eed7"
+    "987654321098765432": "8667ba71b85a4004af54457a9734eed7",
+    "111222333444555666": "Notch"
   }
   ```
-  UUID może być z myślnikami lub bez — zostanie znormalizowane automatycznie. Nieprawidłowy
-  JSON albo UUID zgłosi błąd walidacji przy zapisie.
+  UUID może być z myślnikami lub bez — zostanie znormalizowane automatycznie. Zamiast UUID
+  możesz wpisać **nick Minecraft** (3–16 znaków `[A-Za-z0-9_]`) — domyślny serwis `mc-heads.net`
+  sam rozwiąże go po stronie serwera, więc nie musisz ręcznie szukać UUID. UUID jest jednak
+  odporniejszy: nick podąża za zmianą nazwy konta, a UUID nie. Nieprawidłowy JSON albo wartość
+  (nie-UUID i nie-nick) zgłosi błąd walidacji przy zapisie.
 - **restrictToVoiceView** — jeśli włączone, podmiana działa tylko wtedy, gdy dana osoba
   aktualnie jest na kanale głosowym; jeśli wyłączone (domyślnie), awatar jest podmieniony
   wszędzie (wiadomości, lista członków, profil...).
@@ -149,8 +156,30 @@ koła zębatego przy pluginie, żeby otworzyć jego ustawienia.
   kafelkach (domyślnie włączone).
 - **applyToAllParticipants** — stosuje efekt opacity/mówienia też do niezmapowanych osób
   (na ich oryginalnych awatarach), nie tylko do tych z listy `userMap`.
+- **showVoicePanel** — włącza pływającą nakładkę kanału głosowego (domyślnie wyłączone).
+
+## Nakładka głosowa
+
+Zainspirowana [Overlayed](https://github.com/overlayeddev/overlayed). Po włączeniu
+**showVoicePanel** plugin dorysowuje w oknie Discorda małe, przeciągalne okienko z listą
+wszystkich uczestników Twojego aktualnego kanału głosowego:
+
+- każdy uczestnik jako głowa Minecrafta (jeśli zmapowany) lub zwykły awatar Discorda,
+- **osoba mówiąca** jest podświetlona i w pełni nieprzezroczysta, reszta przygaszona
+  (ten sam poziom co `idleOpacity`),
+- **wyciszeni / ogłuszeni** mają awatar w skali szarości i ikonę (🔇 / 🎧),
+- nagłówek pokazuje nazwę kanału; okno przeciągasz za nagłówek, a `×` je zamyka
+  (wyłącza `showVoicePanel`).
+
+Nakładka pojawia się tylko wtedy, gdy jesteś na kanale głosowym, i znika po wyjściu.
+Renderuje się w **normalnym oknie aplikacji Discord** — nie w nakładce w grze (Game Overlay),
+patrz sekcja [Najczęstsze problemy](#najczęstsze-problemy).
 
 ## Jak znaleźć UUID gracza po nicku
+
+> 💡 Przy domyślnym serwisie `mc-heads.net` możesz po prostu wpisać w `userMap` **nick**
+> zamiast UUID — poniższe kroki są potrzebne tylko, gdy chcesz na sztywno zapisać UUID
+> (odporny na zmianę nazwy) albo używasz serwisu, który przyjmuje wyłącznie UUID.
 
 Publiczne API Mojanga zwraca UUID na podstawie aktualnego nicku gracza.
 
@@ -220,7 +249,15 @@ w Vencordzie go nie ruszy — trzeba osobno zaktualizować plugin
 
 - Klient Discord (desktop) z zainstalowanym Vencordem
 - **Node.js** i **git** (do budowania/instalacji)
-- UUID kont Minecraft osób, których awatar chcesz podmienić
+- UUID **lub nick** kont Minecraft osób, których awatar chcesz podmienić
+
+## Testy
+
+Czysta logika (parsowanie mapy, walidacja UUID/nicku, pomocnicy nakładki) ma testy
+jednostkowe uruchamiane wbudowanym stripowaniem typów Node (18+, zalecane 22+):
+```bash
+npm test
+```
 
 ## Licencja
 
